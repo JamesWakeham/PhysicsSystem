@@ -16,7 +16,7 @@ Rigidbody::~Rigidbody()
 void Rigidbody::fixedUpdate(glm::vec2 gravity, float timeStep)
 {
 	ApplyGravity( gravity * timeStep);
-	applyForce(m_velocity * timeStep);
+	m_position += m_velocity *timeStep;
 	LoopScreenCheck();
 }
 
@@ -27,12 +27,13 @@ void Rigidbody::debug()
 
 void Rigidbody::applyForce(glm::vec2 force)
 {
-	m_position += force;
+	m_velocity = (m_velocity + force);
 }
 
 void Rigidbody::applyForceToActor(Rigidbody * actor2, glm::vec2 force)
 {
-
+	SetVelocity(-force);
+	actor2->SetVelocity(force);
 }
 
 void Rigidbody::ApplyGravity(glm::vec2 gravityDelta)

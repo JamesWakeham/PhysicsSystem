@@ -20,6 +20,8 @@ public:
 	float getTimeStep() const { return m_timeStep; } 
 
 	bool SphereToSphereCollis(PhysicsObject* obj1, PhysicsObject* obj2);
+	bool Sphere2Sphere(PhysicsObject* obj1, PhysicsObject* obj2);
+	bool Sphere2Plane(PhysicsObject* obj1, PhysicsObject* obj2);
 
 	void AddActor(PhysicsObject* obj);
 	void RemoveActor(PhysicsObject* obj);
