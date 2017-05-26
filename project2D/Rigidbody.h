@@ -21,13 +21,16 @@ public:
 	glm::vec2 getVelocity() { return m_velocity; }
 	void SetVelocity(glm::vec2 vel);
 	void SetPos(glm::vec2 pos);
-	float getMass() { return m_mass; } 
+	float getMass();
 
 	void LoopScreenCheck();
+
+	void SetFriction(float _friction);
 protected: 
 	glm::vec2 m_position; 
 	glm::vec2 m_velocity; 
 	float m_mass; 
 	float m_rotation; 
+	float m_friction = 0.999f;
 		   //2D so we only need a single float to represent our rotation 
 };

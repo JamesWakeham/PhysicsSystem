@@ -1,6 +1,7 @@
 #include "PhysicsScene.h"
 #include "Sphere.h"
 #include "Plane.h"
+#include "SpringJoint.h"
 #include <stdlib.h>     /* srand, rand */
 
 PhysicsScene* PhysScenInstance;
@@ -23,11 +24,48 @@ void PhysicsScene::Start()
 	srand(GetApp()->getTime());
 	i = rand();
 
-	//AddActor(new Plane(500,glm::vec2(1,0),glm::vec4(1,0.75,0.5,1)));
 
-	//AddActor(new Sphere(glm::vec2(100, 100), glm::vec2(100, 100), 1, 10, glm::vec4(1, 1, 1, 1)));
+	float midScreen = GetApp()->getWindowHeight() / 2;
 
-	for (int i = 0; i < 10; i++)
+	AddActor(new Sphere(glm::vec2(100, midScreen), glm::vec2(500, 0), 10, 20, glm::vec4(1, 1, 1, 1)));
+
+	AddActor(new Sphere(glm::vec2(800+40, midScreen), glm::vec2(0, 0), 1, 20, glm::vec4(0, 1, 1, 1)));
+
+
+	AddActor(new Sphere(glm::vec2(800+ 0, midScreen+40), glm::vec2(0, 0), 1, 20, glm::vec4(1, 0, 1, 1)));
+	AddActor(new Sphere(glm::vec2(800+ 0, midScreen-40), glm::vec2(0, 0), 1, 20, glm::vec4(1, 1, 0, 1)));
+
+
+	AddActor(new SpringJoint((Rigidbody*)m_actors[1], (Rigidbody*)m_actors[2], 0.1f, 0.9f));
+	AddActor(new SpringJoint((Rigidbody*)m_actors[2], (Rigidbody*)m_actors[3], 0.1f, 0.9f));
+	AddActor(new SpringJoint((Rigidbody*)m_actors[3], (Rigidbody*)m_actors[1], 0.1f, 0.9f));
+
+
+	AddActor(new Sphere(glm::vec2(800 + 60, midScreen - 40), glm::vec2(0, 0), 1, 20, glm::vec4(0, 0, 1, 1)));
+	AddActor(new Sphere(glm::vec2(800 + 60, midScreen - 0), glm::vec2(0, 0), 1, 20, glm::vec4(1, 0, 0, 1)));
+	AddActor(new Sphere(glm::vec2(800 + 60, midScreen + 40), glm::vec2(0, 0), 1, 20, glm::vec4(0, 1, 0, 1)));
+
+	AddActor(new Sphere(glm::vec2(800 + 60, midScreen - 40), glm::vec2(0, 0), 1, 20, glm::vec4(0, 0, 1, 1)));
+	AddActor(new Sphere(glm::vec2(800 + 60, midScreen - 0), glm::vec2(0, 0), 1, 20, glm::vec4(1, 0, 0, 1)));
+
+
+	AddActor(new Sphere(glm::vec2(800 + 60, midScreen - 40), glm::vec2(0, 0), 1, 20, glm::vec4(0, 0, 1, 1)));
+	AddActor(new Sphere(glm::vec2(800 + 60, midScreen - 0), glm::vec2(0, 0), 1, 20, glm::vec4(1, 0,0, 1)));
+	AddActor(new Sphere(glm::vec2(800 + 60, midScreen + 40), glm::vec2(0, 0), 1, 20, glm::vec4(0, 1, 0, 1)));
+
+	AddActor(new Sphere(glm::vec2(800 + 90, midScreen + 50), glm::vec2(0, 0), 1, 20, glm::vec4(0.5, 0.5, 1, 1)));
+	AddActor(new Sphere(glm::vec2(800 + 90, midScreen + 25), glm::vec2(0, 0), 1, 20, glm::vec4(0.5, 1, 0.5, 1)));
+	AddActor(new Sphere(glm::vec2(800 + 90, midScreen - 25), glm::vec2(0, 0), 1, 20, glm::vec4(1, 0.5, 1, 1)));
+	AddActor(new Sphere(glm::vec2(800 + 90, midScreen - 50), glm::vec2(0, 0), 1, 20, glm::vec4(1, 0.5, 0.5, 1)));
+
+	m_actors.back()->isStatic = true;
+
+	AddActor(new Plane(10, glm::vec2(1, 0), glm::vec4(1, 0.75, 0.5, 1)));
+	AddActor(new Plane(10, glm::vec2(0, 1), glm::vec4(1, 0.75, 0.5, 1)));
+	AddActor(new Plane(GetApp()->getWindowHeight()-10, glm::vec2(0, 1), glm::vec4(1, 0.75, 0.5, 1)));
+	AddActor(new Plane(GetApp()->getWindowWidth()-10, glm::vec2(1, 0), glm::vec4(1, 0.75, 0.5, 1)));
+
+	for (int i = 0; i < 0; i++)
 	{
 		AddActor(
 			new Sphere(
@@ -37,7 +75,7 @@ void PhysicsScene::Start()
 				glm::vec2(
 					rand() % 500,
 					rand() % 500),
-				1,
+				0.1,
 				20,
 				glm::vec4(rand() % 100 / 100.0f, rand() % 100 / 100.0f, rand() % 100 / 100.0f,1)));
 	}
@@ -72,6 +110,7 @@ void PhysicsScene::debugScene()
 
 bool PhysicsScene::SphereToSphereCollis(PhysicsObject * obj1, PhysicsObject * obj2)
 {
+	/*
 	//try to cast objects to sphere and sphere 
 	Sphere *sphere1 = dynamic_cast<Sphere*>(obj1); 
 	Sphere *sphere2 = dynamic_cast<Sphere*>(obj2); 
@@ -120,6 +159,7 @@ bool PhysicsScene::SphereToSphereCollis(PhysicsObject * obj1, PhysicsObject * ob
 
 		}
 	}
+	*/
 	return false;
 }
 
@@ -140,15 +180,19 @@ bool PhysicsScene::Sphere2Sphere(PhysicsObject * obj1, PhysicsObject * obj2)
 			glm::vec2 collisionNormal = glm::normalize(delta); 
 			glm::vec2 relativeVelocity = sphere1->getVelocity() - sphere2->getVelocity(); 
 			glm::vec2 collisionVector = collisionNormal * (glm::dot(relativeVelocity, collisionNormal)); 
-			glm::vec2 forceVector = collisionVector * 1.0f / (1.0f / sphere1->getMass() + 1.0f / sphere2->getMass());
+			glm::vec2 forceVector = collisionVector * 2.0f / (1.0f / sphere1->getMass() + 1.0f / sphere2->getMass());
 			// use Newton's third law to apply collision forces 
 			// to colliding bodies 
 			sphere1->applyForceToActor(sphere2, forceVector); 
-			// move out spheres out of collision 
-			glm::vec2 separationVector = collisionNormal * intersection * 0.5f;
-			sphere1->SetPos(sphere1->getPosition() - separationVector); 
-			sphere2->SetPos(sphere2->getPosition() + separationVector);
-			return true; 
+			// move out spheres out of collision
+			//float weightValue = (1.0f / sphere1->getMass() + 1.0f / sphere2->getMass())-1;
+			glm::vec2 separationVector = collisionNormal * intersection;
+			if (!sphere1->isStatic && !sphere2->isStatic) {
+				separationVector *= 0.5f;
+			}
+			sphere1->SetPos(sphere1->getPosition() - (separationVector));
+			sphere2->SetPos(sphere2->getPosition() + (separationVector));
+			return true;
 		} 
 	} 
 	return false;
