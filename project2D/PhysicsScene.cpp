@@ -36,9 +36,9 @@ void PhysicsScene::Start()
 	AddActor(new Sphere(glm::vec2(800+ 0, midScreen-40), glm::vec2(0, 0), 1, 20, glm::vec4(1, 1, 0, 1)));
 
 
-	AddActor(new SpringJoint((Rigidbody*)m_actors[1], (Rigidbody*)m_actors[2], 0.1f, 0.9f));
-	AddActor(new SpringJoint((Rigidbody*)m_actors[2], (Rigidbody*)m_actors[3], 0.1f, 0.9f));
-	AddActor(new SpringJoint((Rigidbody*)m_actors[3], (Rigidbody*)m_actors[1], 0.1f, 0.9f));
+	AddActor(new SpringJoint((Rigidbody*)m_actors[1], (Rigidbody*)m_actors[2], 0.1f, 0.99f));
+	AddActor(new SpringJoint((Rigidbody*)m_actors[2], (Rigidbody*)m_actors[3], 0.1f, 0.99f));
+	AddActor(new SpringJoint((Rigidbody*)m_actors[3], (Rigidbody*)m_actors[1], 0.1f, 0.99f));
 
 
 	AddActor(new Sphere(glm::vec2(800 + 60, midScreen - 40), glm::vec2(0, 0), 1, 20, glm::vec4(0, 0, 1, 1)));
@@ -60,10 +60,10 @@ void PhysicsScene::Start()
 
 	m_actors.back()->isStatic = true;
 
-	AddActor(new Plane(10, glm::vec2(1, 0), glm::vec4(1, 0.75, 0.5, 1)));
-	AddActor(new Plane(10, glm::vec2(0, 1), glm::vec4(1, 0.75, 0.5, 1)));
-	AddActor(new Plane(GetApp()->getWindowHeight()-10, glm::vec2(0, 1), glm::vec4(1, 0.75, 0.5, 1)));
-	AddActor(new Plane(GetApp()->getWindowWidth()-10, glm::vec2(1, 0), glm::vec4(1, 0.75, 0.5, 1)));
+	AddActor(new Plane(0, glm::vec2(1, 0), glm::vec4(1, 0.75, 0.5, 1)));
+	AddActor(new Plane(0, glm::vec2(0, 1), glm::vec4(1, 0.75, 0.5, 1)));
+	AddActor(new Plane(GetApp()->getWindowHeight(), glm::vec2(0, 1), glm::vec4(1, 0.75, 0.5, 1)));
+	AddActor(new Plane(GetApp()->getWindowWidth(), glm::vec2(1, 0), glm::vec4(1, 0.75, 0.5, 1)));
 
 	for (int i = 0; i < 0; i++)
 	{
@@ -180,10 +180,21 @@ bool PhysicsScene::Sphere2Sphere(PhysicsObject * obj1, PhysicsObject * obj2)
 			glm::vec2 collisionNormal = glm::normalize(delta); 
 			glm::vec2 relativeVelocity = sphere1->getVelocity() - sphere2->getVelocity(); 
 			glm::vec2 collisionVector = collisionNormal * (glm::dot(relativeVelocity, collisionNormal)); 
-			glm::vec2 forceVector = collisionVector * 2.0f / (1.0f / sphere1->getMass() + 1.0f / sphere2->getMass());
+			glm::vec2 forceVector;
+			if (sphere1->isStatic) {
+				forceVector = collisionVector * 1.0f / (1.0f / sphere2->getMass());
+				sphere2->applyForce(-forceVector);
+			}
+			else if (sphere2->isStatic){
+				forceVector = collisionVector * 1.0f / (1.0f / sphere1->getMass());
+				sphere1->applyForce(-forceVector);
+			}
+			else {
+				forceVector = collisionVector * 2.0f / (1.0f / sphere1->getMass() + 1.0f / sphere2->getMass());
+				sphere1->applyForceToActor(sphere2, forceVector);
+			}
 			// use Newton's third law to apply collision forces 
 			// to colliding bodies 
-			sphere1->applyForceToActor(sphere2, forceVector); 
 			// move out spheres out of collision
 			//float weightValue = (1.0f / sphere1->getMass() + 1.0f / sphere2->getMass())-1;
 			glm::vec2 separationVector = collisionNormal * intersection;

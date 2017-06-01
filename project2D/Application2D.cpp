@@ -103,11 +103,16 @@ void Application2D::draw() {
 	//// draw a thin line
 
 	m_2dRenderer->setRenderColour(1, 0, 0, 1);
-	m_2dRenderer->drawLine(0, 0, 100, 0, 2, 1);
+	m_2dRenderer->drawLine(getWindowWidth(), getWindowHeight(), getWindowWidth(), 0, 2, 1);
+
+	m_2dRenderer->setRenderColour(1, 0, 0, 1);
+	m_2dRenderer->drawLine(0, 0, getWindowWidth(), 0, 2, 1);
 
 	m_2dRenderer->setRenderColour(0, 1, 0, 1);
-	m_2dRenderer->drawLine(0, 0, 0, 100, 2, 1);
+	m_2dRenderer->drawLine(0, 0, 0, getWindowHeight(), 2, 1);
 
+	m_2dRenderer->setRenderColour(0, 1, 0, 1);
+	m_2dRenderer->drawLine(getWindowWidth(), getWindowHeight(), 0, getWindowHeight(), 2, 1);
 	//// draw a moving purple circle
 	//m_2dRenderer->setRenderColour(1, 0, 1, 1);
 	//m_2dRenderer->drawCircle(sin(m_timer) * 100 + 600, 150, 50);
